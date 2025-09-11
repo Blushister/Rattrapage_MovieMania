@@ -4,8 +4,9 @@ import { MultipleMovieUserProps } from "@/src/types";
 
 export const getAllMovieGenres = async () => {
 	try {
+		const apiUrl = process.env.RECOS_API_URL || process.env.NEXT_PUBLIC_RECOS_API_URL;
 		const response = await axios({
-			url: `${process.env.NEXT_PUBLIC_RECOS_API_URL}/genres`,
+			url: `${apiUrl}/genres`,
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -21,8 +22,9 @@ export const getAllMovieGenres = async () => {
 
 export const getMoviesRecommendations = async (session: any) => {
 	try {
+		const apiUrl = process.env.RECOS_API_URL || process.env.NEXT_PUBLIC_RECOS_API_URL;
 		const response = await axios({
-			url: `${process.env.NEXT_PUBLIC_RECOS_API_URL}/recommendations/`,
+			url: `${apiUrl}/recommendations/`,
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -39,8 +41,9 @@ export const getMoviesRecommendations = async (session: any) => {
 
 export const getMovieDetails = async (id: number) => {
 	try {
+		const apiUrl = process.env.RECOS_API_URL || process.env.NEXT_PUBLIC_RECOS_API_URL;
 		const response = await axios({
-			url: `${process.env.NEXT_PUBLIC_RECOS_API_URL}/movies/${id}`,
+			url: `${apiUrl}/movies/${id}`,
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -57,8 +60,9 @@ export const getMovieDetails = async (id: number) => {
 export const getMovieDetailsByTitle = async (query: string) => {
 	try {
 		console.log("query", query);
+		const apiUrl = process.env.RECOS_API_URL || process.env.NEXT_PUBLIC_RECOS_API_URL;
 		const response = await axios({
-			url: `${process.env.NEXT_PUBLIC_RECOS_API_URL}/movies/search/?title=${query}`,
+			url: `${apiUrl}/movies/search/?title=${query}`,
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",

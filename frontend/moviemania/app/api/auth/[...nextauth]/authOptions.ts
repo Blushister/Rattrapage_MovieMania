@@ -4,7 +4,8 @@ import axios from "axios";
 
 const BACKEND_ACCESS_TOKEN_LIFETIME = 60 * 24 * 8;
 const SESSION_MAX_AGE = 24 * 60 * 60; // 24 hours in seconds
-const LOGIN_URL = `${process.env.NEXT_PUBLIC_USERS_API_URL}/api/v1/login/access-token`;
+// Utiliser l'URL interne pour NextAuth (Server-side)
+const LOGIN_URL = `${process.env.USERS_API_URL || process.env.NEXT_PUBLIC_USERS_API_URL}/api/v1/login/access-token`;
 
 const getCurrentEpochTime = () => {
 	return Math.floor(new Date().getTime() / 1000);

@@ -10,6 +10,12 @@ const nextConfig = {
       ],
       unoptimized: true, // Désactive l'optimisation des images
    },
+   // Configuration pour proxy HTTPS local
+   experimental: {
+      serverActions: {
+         allowedOrigins: ['localhost:8443', 'localhost']
+      }
+   }
 };
 
 export default nextConfig;

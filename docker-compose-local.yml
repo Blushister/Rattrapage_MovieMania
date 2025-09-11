@@ -1,0 +1,150 @@
+version: "3.8"
+
+name: moviemania-stack
+
+services:
+    mariadb:
+        image: mariadb:latest
+        container_name: mariadb
+        restart: always
+        env_file:
+            - .env
+        environment:
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        ports:
+            - "2356:3306"
+        volumes:
+            - mariadb_data:/var/lib/mysql
+            - ./users_api/database/MovieDatabase.sql:/docker-entrypoint-initdb.d/init.sql:ro
+        networks:
+            - moviemania
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        container_name: phpmyadmin
+        restart: always
+        env_file:
+            - .env
+        environment:
+            PMA_HOST: ${MYSQL_SERVER}
+            PMA_PORT: ${MYSQL_PORT}
+            UPLOAD_LIMIT: 1000M
+            POST_MAX_SIZE: 1000M
+            MEMORY_LIMIT: 1000M
+        ports:
+            - "8081:80"
+        depends_on:
+            - mariadb
+        networks:
+            - moviemania
+
+    users_api:
+        container_name: users_api
+        build:
+            context: .
+            dockerfile: ./docker/users_api/Dockerfile
+            args:
+                INSTALL_DEV: ${INSTALL_DEV-false}
+        platform: linux/amd64 # Patch for M1 Mac
+        ports:
+            - "8888:8888"
+        restart: always
+        networks:
+            - moviemania
+        depends_on:
+            - mariadb
+        env_file:
+            - .env
+        environment:
+            - DOMAIN=${DOMAIN}
+            - ENVIRONMENT=${ENVIRONMENT}
+            - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
+            - SECRET_KEY=${SECRET_KEY}
+            - FIRST_SUPERUSER=${FIRST_SUPERUSER}
+            - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD}
+            - USERS_OPEN_REGISTRATION=${USERS_OPEN_REGISTRATION}
+            - SMTP_HOST=${SMTP_HOST}
+            - SMTP_USER=${SMTP_USER}
+            - SMTP_PASSWORD=${SMTP_PASSWORD}
+            - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL}
+            - MYSQL_SERVER=${MYSQL_SERVER}
+            - MYSQL_PORT=${MYSQL_PORT}
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+    recos_api:
+        container_name: rec_api
+        restart: always
+        build:
+            context: .
+            dockerfile: ./docker/rec_api/Dockerfile
+        ports:
+            - "8000:8000"
+        env_file:
+            - .env
+        environment:
+            - DATABASE_URL=mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${MYSQL_SERVER}:${MYSQL_PORT}/${MYSQL_DATABASE}
+        depends_on:
+            - mariadb
+        networks:
+            - moviemania
+
+    frontend:
+        container_name: nextjs_frontend
+        build:
+            context: .
+            dockerfile: ./docker/front/Dockerfile
+        ports:
+            - "3000:3000"
+        env_file:
+            - ./frontend/moviemania/.env # Pointage vers le fichier .env spécifique au frontend
+        environment:
+            - NODE_ENV=production
+        depends_on:
+            - users_api
+            - recos_api
+        networks:
+            - moviemania
+        volumes:
+            - nextjs_cache:/app/.next/cache
+
+    redis:
+        image: redis:latest
+        container_name: redis
+        ports:
+            - "6382:6379"
+        networks:
+            - moviemania
+
+    # Reverse proxy HTTPS pour développement local
+    nginx-local:
+        image: nginx:alpine
+        container_name: nginx_local_ssl
+        ports:
+            - "8443:8443"  # HTTPS
+            - "8080:8080"  # HTTP redirect
+        volumes:
+            - ./nginx-local.conf:/etc/nginx/nginx.conf:ro
+            - ./ssl/cert.pem:/etc/ssl/certs/cert.pem:ro
+            - ./ssl/key.pem:/etc/ssl/private/key.pem:ro
+        depends_on:
+            - frontend
+            - users_api
+            - recos_api
+        networks:
+            - moviemania
+        restart: unless-stopped
+            
+volumes:
+    mariadb_data:
+    nextjs_cache:
+
+networks:
+    moviemania:
+        name: moviemania
+        driver: bridge

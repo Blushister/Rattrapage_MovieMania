@@ -9,8 +9,10 @@ interface CheckUserProps {
 
 export async function checkUserService(userData: CheckUserProps) {
 	try {
+		// Utiliser l'URL côté serveur pour les Server Actions
+		const apiUrl = process.env.USERS_API_URL || process.env.NEXT_PUBLIC_USERS_API_URL;
 		const response = await axios({
-			url: `${process.env.NEXT_PUBLIC_USERS_API_URL}/api/v1/users/check`,
+			url: `${apiUrl}/api/v1/users/check`,
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -19,7 +21,8 @@ export async function checkUserService(userData: CheckUserProps) {
 		});
 		return response.data;
 	} catch (axiosError) {
-		console.error(axiosError);
+		console.error("Error checking user:", axiosError);
+		return { error: "Failed to check user" };
 	}
 }
 
@@ -31,8 +34,10 @@ interface RegisterUserProps {
 
 export async function registerUserService(userData: RegisterUserProps) {
 	try {
+		// Utiliser l'URL côté serveur pour les Server Actions
+		const apiUrl = process.env.USERS_API_URL || process.env.NEXT_PUBLIC_USERS_API_URL;
 		const response = await axios({
-			url: `${process.env.NEXT_PUBLIC_USERS_API_URL}/api/v1/users/open`,
+			url: `${apiUrl}/api/v1/users/open`,
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -42,7 +47,7 @@ export async function registerUserService(userData: RegisterUserProps) {
 		return response.data;
 	} catch (axiosError) {
 		console.error("Erreur lors de l'enregistrement de l'utilisateur :", axiosError);
-		throw axiosError;
+		return { error: "Failed to register user" };
 	}
 }
 
@@ -53,8 +58,10 @@ interface LoginUserProps {
 
 export async function loginUserService(userData: LoginUserProps) {
 	try {
+		// Utiliser l'URL côté serveur pour les Server Actions
+		const apiUrl = process.env.USERS_API_URL || process.env.NEXT_PUBLIC_USERS_API_URL;
 		const response = await axios.post(
-			`${process.env.NEXT_PUBLIC_USERS_API_URL}/api/v1/login/access-token`,
+			`${apiUrl}/api/v1/login/access-token`,
 			userData, // Utilise directement l'objet
 			{
 				headers: {

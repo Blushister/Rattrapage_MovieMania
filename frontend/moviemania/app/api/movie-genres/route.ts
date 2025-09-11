@@ -1,13 +1,15 @@
 "use server";
 
 import { NextRequest, NextResponse } from "next/server";
-import { getAllMovieGenres } from "@/src/data/services/movie-services";
+import axios from "axios";
 
 export async function GET(req: NextRequest) {
 	try {
-		const response = await getAllMovieGenres();
-		return NextResponse.json(response, { status: 200 });
+		// Utiliser l'URL interne du container pour l'API route côté serveur
+		const response = await axios.get("http://rec_api:8000/genres");
+		return NextResponse.json(response.data, { status: 200 });
 	} catch (error) {
+		console.error("Erreur lors de la récupération des genres:", error);
 		return NextResponse.json({ error: "Error fetching movie genres" }, { status: 500 });
 	}
 }
