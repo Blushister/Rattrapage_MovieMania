@@ -1,5 +1,3 @@
-version: "3.8"
-
 name: moviemania-stack
 
 services:
@@ -94,25 +92,6 @@ services:
         networks:
             - moviemania
 
-    frontend:
-        container_name: nextjs_frontend
-        build:
-            context: .
-            dockerfile: ./docker/front/Dockerfile
-        ports:
-            - "3000:3000"
-        env_file:
-            - ./frontend/moviemania/.env # Pointage vers le fichier .env spécifique au frontend
-        environment:
-            - NODE_ENV=production
-        depends_on:
-            - users_api
-            - recos_api
-        networks:
-            - moviemania
-        volumes:
-            - nextjs_cache:/app/.next/cache
-
     redis:
         image: redis:latest
         container_name: redis
@@ -121,28 +100,51 @@ services:
         networks:
             - moviemania
 
+    # Frontend Django
+    django_frontend:
+        container_name: django_frontend
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        ports:
+            - "8001:8000"
+        restart: always
+        networks:
+            - moviemania
+        depends_on:
+            - users_api
+            - recos_api
+        env_file:
+            - .env
+        environment:
+            - DEBUG=${DEBUG-true}
+            - SECRET_KEY=${SECRET_KEY}
+            - USERS_API_URL=http://users_api:8888
+            - RECOMMENDATIONS_API_URL=http://recos_api:8000
+            - ALLOWED_HOSTS=localhost,127.0.0.1,django_frontend
+
     # Reverse proxy HTTPS pour développement local
     nginx-local:
         image: nginx:alpine
         container_name: nginx_local_ssl
         ports:
-            - "8443:8443"  # HTTPS
+            - "443:8443"   # HTTPS sur port 443
+            - "80:80"      # HTTP redirect
             - "8080:8080"  # HTTP redirect
         volumes:
             - ./nginx-local.conf:/etc/nginx/nginx.conf:ro
             - ./ssl/cert.pem:/etc/ssl/certs/cert.pem:ro
             - ./ssl/key.pem:/etc/ssl/private/key.pem:ro
         depends_on:
-            - frontend
             - users_api
             - recos_api
+            - django_frontend
         networks:
             - moviemania
         restart: unless-stopped
             
 volumes:
     mariadb_data:
-    nextjs_cache:
 
 networks:
     moviemania:

@@ -1,8 +1,0 @@
-.hoverEffect:hover .hoverColor {
-	transition: color 0.5s;
-	color: #42f2f7;
-}
-
-.hoverImageEffect:hover .hoverImage {
-	transform: scale(1.05);
-}

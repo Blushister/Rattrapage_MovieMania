@@ -1,6 +1,119 @@
-.vscode
-.git
+# Environnements virtuels Python
 .venv/
-**/.env
+venv/
+env/
+ENV/
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+# Mais garder les fichiers d'exemple
+!.env.example
+!.env.template
+
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+static/
+
+# Certificats SSL et clés privées
+ssl/
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Fichiers de backup de base de données
+*.sql
+backup-*.sql
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cache et fichiers temporaires
+.cache/
 .pytest_cache/
-*__pycache__/*
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# IDE et éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Node.js (si jamais utilisé)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Fichiers de configuration locale
+local_settings.py
+settings_local.py
+
+# Fichiers de test
+test.db
+*.test.db
+
+# Fichiers de migration Django (optionnel - certains projets les gardent)
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# Fichiers de documentation générés
+docs/_build/
+
+# Fichiers de déploiement
+deploy/
+deployment/
+
+# Fichiers de monitoring
+monitoring/
+*.pid
+
+# Fichiers de cookies et sessions de test
+cookies.txt
+cookies*.txt
+session.txt
+
+# Fichiers Python compilés
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+
+# Certificats SSL (garder les exemples mais pas les vrais)
+ssl/cert.pem
+ssl/key.pem
+ssl/*.pem
+ssl/*.key

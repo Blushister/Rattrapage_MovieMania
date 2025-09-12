@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MovieMania{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="logo">
+        <div class="logo-main">MovieMania</div>
+        <div class="logo-text">VOS FILMS, VOS ÉMOTIONS</div>
+    </div>
+
+    <div class="card">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="{% static 'js/forms.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

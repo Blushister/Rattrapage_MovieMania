@@ -1,0 +1,28 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}MovieMania - Créer un compte{% endblock %}
+
+{% block content %}
+<h1 class="title">Créer un compte</h1>
+<p class="subtitle">Rejoignez MovieMania et découvrez vos prochains films favoris</p>
+
+{% if error %}
+<div class="error">{{ error }}</div>
+{% endif %}
+
+<form method="POST" id="signupForm">
+    {% csrf_token %}
+    <div class="form-group">
+        <input type="email" name="email" class="form-input" placeholder="email@domain.com" required>
+    </div>
+    <div class="form-group">
+        <input type="password" name="password" class="form-input" placeholder="Mot de passe" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Sign up with email</button>
+</form>
+
+<div class="link">
+    <a href="{% url 'users:login' %}">Login</a>
+</div>
+{% endblock %}

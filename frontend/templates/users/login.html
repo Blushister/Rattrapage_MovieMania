@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}MovieMania - Connexion{% endblock %}
+
+{% block content %}
+<h1 class="title">Connexion</h1>
+
+{% if error %}
+<div class="error">{{ error }}</div>
+{% endif %}
+
+<form method="POST" id="loginForm">
+    {% csrf_token %}
+    <div class="form-group">
+        <input type="email" name="email" class="form-input" placeholder="Email" required>
+    </div>
+    <div class="form-group">
+        <input type="password" name="password" class="form-input" placeholder="Mot de passe" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Valider</button>
+</form>
+
+<div class="link">
+    <a href="{% url 'users:register' %}">Sign in</a>
+</div>
+{% endblock %}
