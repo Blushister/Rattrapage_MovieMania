@@ -13,6 +13,7 @@ RUN apt-get update \
         default-libmysqlclient-dev \
         pkg-config \
         gcc \
+        default-mysql-client \
     && rm -rf /var/lib/apt/lists/*
 
 # Copier et installer les dépendances Python
@@ -26,8 +27,11 @@ COPY . /app/
 RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
 
+# Rendre le script exécutable
+RUN chmod +x /app/start.sh
+
 # Exposer le port
 EXPOSE 8000
 
 # Commande par défaut
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "moviemania_frontend.wsgi:application"]
+CMD ["/app/start.sh"]

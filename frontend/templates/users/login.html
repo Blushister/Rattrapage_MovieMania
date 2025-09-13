@@ -5,6 +5,7 @@
 
 {% block content %}
 <h1 class="title">Connexion</h1>
+<p class="subtitle">Connectez-vous à votre compte MovieMania</p>
 
 {% if error %}
 <div class="error">{{ error }}</div>
@@ -13,15 +14,15 @@
 <form method="POST" id="loginForm">
     {% csrf_token %}
     <div class="form-group">
-        <input type="email" name="email" class="form-input" placeholder="Email" required>
+        <input type="email" name="email" class="form-input" placeholder="email@domain.com" required>
     </div>
     <div class="form-group">
         <input type="password" name="password" class="form-input" placeholder="Mot de passe" required>
     </div>
-    <button type="submit" class="btn btn-primary">Valider</button>
+    <button type="submit" class="btn btn-primary">Se connecter</button>
 </form>
 
 <div class="link">
-    <a href="{% url 'users:register' %}">Sign in</a>
+    <a href="{% url 'users:register' %}">Créer un compte</a>
 </div>
 {% endblock %}
