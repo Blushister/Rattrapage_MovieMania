@@ -16,7 +16,6 @@ services:
             - "2356:3306"
         volumes:
             - mariadb_data:/var/lib/mysql
-            - ./users_api/database/MovieDatabase.sql:/docker-entrypoint-initdb.d/init.sql:ro
         networks:
             - moviemania
 
@@ -119,8 +118,10 @@ services:
         environment:
             - DEBUG=${DEBUG-true}
             - SECRET_KEY=${SECRET_KEY}
-            - USERS_API_URL=http://users_api:8888
-            - RECOMMENDATIONS_API_URL=http://recos_api:8000
+            - USERS_API_URL=${USERS_API_URL}
+            - USERS_API_LOGIN_URL=${USERS_API_LOGIN_URL}
+            - GENREUSERS_API_URL=${GENREUSERS_API_URL}
+            - RECOMMENDATIONS_API_URL=${RECOMMENDATIONS_API_URL}
             - ALLOWED_HOSTS=localhost,127.0.0.1,django_frontend
 
     # Reverse proxy HTTPS pour développement local

@@ -21,7 +21,11 @@ ENV PYTHONPATH=/app
 COPY ./users_api/alembic.ini /app/
 
 COPY ./users_api/app /app/app
+COPY ./docker/users_api/clear-users-startup.py /app/clear-users-startup.py
+COPY ./docker/users_api/startup.sh /app/startup.sh
+
+RUN chmod +x /app/startup.sh
 
 EXPOSE 8888
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8888", "--log-level", "debug", "--access-log"]
+CMD ["/app/startup.sh"]

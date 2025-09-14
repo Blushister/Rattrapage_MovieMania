@@ -38,6 +38,10 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:3000",
+    # Additional origins for Django frontend and nginx proxy
+    "http://localhost:8001",
+    "http://localhost:80", 
+    "http://localhost:8080",
 ]
 
 
@@ -86,7 +90,9 @@ async def get_current_user(request: Request) -> TokenData:
     if not token:
         raise HTTPException(status_code=403, detail="Not authenticated")
 
-    # token = token.split(" ")[1]
+    # Extract JWT token from Authorization header (removes Bearer prefix)
+    if token.startswith("Bearer "):
+        token = token.split(" ")[1]
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
