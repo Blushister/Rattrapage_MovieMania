@@ -1,28 +1,77 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block title %}MovieMania - Créer un compte{% endblock %}
+{% block title %}MovieMania - Create Account{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/genre_selection.css' %}">
+<link rel="stylesheet" href="{% static 'css/genre_images.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1 class="title">Créer un compte</h1>
-<p class="subtitle">Rejoignez MovieMania et découvrez vos prochains films favoris</p>
+<div id="step1" class="registration-step active">
+    <h1 class="title">Create Account</h1>
+    <p class="subtitle">Join MovieMania and discover your next favorite movies</p>
 
-{% if error %}
-<div class="error">{{ error }}</div>
-{% endif %}
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
 
-<form method="POST" id="signupForm">
-    {% csrf_token %}
-    <div class="form-group">
-        <input type="email" name="email" class="form-input" placeholder="email@domain.com" required>
+    <form id="emailPasswordForm">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="email" name="email" id="email" class="form-input" placeholder="email@domain.com" required>
+        </div>
+        <div class="form-group">
+            <input type="password" name="password" id="password" class="form-input" placeholder="Password" required>
+        </div>
+        <button type="button" id="nextStepBtn" class="btn btn-primary">Continue</button>
+    </form>
+
+    <div class="link">
+        <a href="{% url 'users:login' %}">Login</a>
     </div>
-    <div class="form-group">
-        <input type="password" name="password" class="form-input" placeholder="Mot de passe" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Sign up with email</button>
-</form>
-
-<div class="link">
-    <a href="{% url 'users:login' %}">Login</a>
 </div>
+
+<div id="step2" class="registration-step">
+    <div class="genre-selection">
+        <div class="genre-header">
+            <div class="step-indicator">
+                <div class="step-circle">2</div>
+                <div class="step-text">Step 2 of 2</div>
+            </div>
+            <h1 class="genre-title">Which movie genres do you prefer?</h1>
+            <p class="genre-subtitle">Select at least 3 genres for personalized recommendations.</p>
+        </div>
+
+        <form method="POST" id="signupForm">
+            {% csrf_token %}
+            <input type="hidden" name="email" id="hiddenEmail">
+            <input type="hidden" name="password" id="hiddenPassword">
+            
+            <div class="genres-grid">
+                {% for genre in genres %}
+                <div class="genre-card" data-genre-id="{{ genre.genre_id }}">
+                    <div class="genre-image"></div>
+                    <div class="genre-overlay">
+                        <div class="genre-name">{{ genre.name }}</div>
+                    </div>
+                    <div class="genre-checkbox">✓</div>
+                    <input type="checkbox" name="genres" value="{{ genre.genre_id }}" style="display: none;">
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="selection-count">0 genres selected</div>
+
+            <div class="navigation">
+                <button type="button" id="backStepBtn" class="nav-button back">Back</button>
+                <button type="submit" id="createAccountBtn" class="nav-button next" disabled>Create Account</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
 {% endblock %}

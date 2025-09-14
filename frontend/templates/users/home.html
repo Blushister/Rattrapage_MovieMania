@@ -1,0 +1,76 @@
+{% extends 'base/home_base.html' %}
+{% load static %}
+
+{% block title %}MovieMania - Home{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="hero-info">
+                <h1 class="hero-title">Joker</h1>
+                <div class="hero-meta">
+                    <span class="hero-genre">Thriller</span>
+                    <span class="hero-year">2019</span>
+                    <span class="hero-duration">2h 2min</span>
+                </div>
+                <p class="hero-description">
+                    In 1980s Gotham City, failed comedian Arthur Fleck descends into madness and becomes the Joker.
+                </p>
+                <button class="play-button">Watch Trailer</button>
+            </div>
+        </div>
+        <div class="hero-background"></div>
+    </div>
+
+    <div class="recommendations-container">
+        <div class="recommendation-section">
+            <h2 class="section-title">My Recommendations</h2>
+            <div class="movie-carousel" id="genre-recommendations">
+                <!-- Movies loaded dynamically via JavaScript -->
+            </div>
+        </div>
+
+        <div class="recommendation-section">
+            <h2 class="section-title">Trending Now</h2>
+            <div class="movie-carousel" id="trending-recommendations">
+                <!-- Movies loaded dynamically via JavaScript -->
+            </div>
+        </div>
+
+        <div class="recommendation-section">
+            <h2 class="section-title">New Releases</h2>
+            <div class="movie-carousel" id="new-movies">
+                <!-- Movies loaded dynamically via JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Movie card template for dynamic content generation -->
+<template id="movie-card-template">
+    <div class="movie-card" data-movie-id="">
+        <div class="movie-poster">
+            <img src="" alt="" loading="lazy">
+            <div class="movie-overlay">
+                <button class="play-btn">▶</button>
+            </div>
+        </div>
+        <div class="movie-info">
+            <h3 class="movie-title"></h3>
+            <div class="movie-meta">
+                <span class="movie-year"></span>
+                <span class="movie-rating">★ <span class="rating-value"></span></span>
+            </div>
+        </div>
+    </div>
+</template>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/home.js' %}"></script>
+{% endblock %}

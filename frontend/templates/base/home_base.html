@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MovieMania{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="home-body">
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-header">
+                <span class="logo-main">MovieMania</span>
+                <span class="logo-sub">My Library</span>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search...">
+                <button class="search-btn">🔍</button>
+            </div>
+            
+            <div class="user-menu">
+                <button class="user-avatar">👤</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{% static 'js/forms.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
