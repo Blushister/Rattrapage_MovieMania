@@ -112,8 +112,35 @@ session.txt
 __pycache__/
 *.so
 
-# Certificats SSL (garder les exemples mais pas les vrais)
+# Security - Certificates and sensitive files
 ssl/cert.pem
 ssl/key.pem
 ssl/*.pem
 ssl/*.key
+*.jwt
+*_rsa
+*_rsa.pub
+id_rsa
+id_rsa.pub
+*.p8
+
+# Security - API keys and secrets
+.secrets/
+secrets/
+*secret*
+*SECRET*
+api-keys.txt
+*.secrets
+.env.secrets
+
+# Security - Database exports and backups  
+*.dump
+*.backup
+database.sql
+db_backup_*
+
+# Security - Session and auth files
+.session
+session_*
+auth_token*
+refresh_token*
