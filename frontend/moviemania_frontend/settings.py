@@ -4,11 +4,17 @@ from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me-in-production')
+SECRET_KEY = config('SECRET_KEY', default='super-secret-key-change-in-production-123456789')
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,django_frontend', cast=lambda v: [s.strip() for s in v.split(',')])
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://localhost',
+    'https://localhost:443',
+    'http://localhost:8001',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -86,26 +92,11 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-USERS_API_URL = config('USERS_API_URL', default='http://users_api:8888/api/v1/users')
-USERS_API_LOGIN_URL = config('USERS_API_LOGIN_URL', default='http://users_api:8888/api/v1/login')
-GENREUSERS_API_URL = config('GENREUSERS_API_URL', default='http://users_api:8888/api/v1/genreusers')
-RECOMMENDATIONS_API_URL = config('RECOMMENDATIONS_API_URL', default='http://localhost:8000')
-RECOMMENDATIONS_API_INTERNAL_URL = config('RECOMMENDATIONS_API_INTERNAL_URL', default='http://rec_api:8000')
+USERS_API_URL = 'http://users_api:8888/api/v1/users'
+USERS_API_LOGIN_URL = 'http://users_api:8888/api/v1/login'
+GENREUSERS_API_URL = 'http://users_api:8888/api/v1/genreusers'
+RECOMMENDATIONS_API_URL = config('RECOMMENDATIONS_API_URL', default='https://localhost/api/recos')
+RECOMMENDATIONS_API_INTERNAL_URL = 'http://rec_api:8000'
 
 SESSION_COOKIE_AGE = 3600
 SESSION_SAVE_EVERY_REQUEST = True
-
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
-SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
-
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_TRUSTED_ORIGINS = [
-    'https://localhost',
-    'http://localhost',
-]
-
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SAMESITE = 'Lax'
