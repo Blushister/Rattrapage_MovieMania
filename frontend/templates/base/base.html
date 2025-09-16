@@ -1,22 +1,25 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MovieMania - Votre plateforme de recommandations cinématographiques personnalisées">
+    <meta name="author" content="MovieMania">
+    <meta name="theme-color" content="#007bff">
     <title>{% block title %}MovieMania{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
-<body>
-    <div class="logo">
-        <div class="logo-main">MovieMania</div>
+<body role="document">
+    <header class="logo" role="banner">
+        <img src="{% static 'images/logo.png' %}" alt="MovieMania" class="logo-image">
         <div class="logo-text">YOUR MOVIES, YOUR EMOTIONS</div>
-    </div>
+    </header>
 
-    <div class="card">
+    <main class="card" role="main">
         {% block content %}{% endblock %}
-    </div>
+    </main>
 
     <script src="{% static 'js/forms.js' %}"></script>
     {% block extra_js %}{% endblock %}
