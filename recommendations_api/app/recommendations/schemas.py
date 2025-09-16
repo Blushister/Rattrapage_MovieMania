@@ -70,8 +70,9 @@ class MovieSchema(BaseModel):
 class RecommendationSchema(BaseModel):
     movie_id: int
     title: str
+    release_date: Optional[date] = None
+    vote_average: Optional[float] = None
     backdrop_path: Optional[str] = None
-
 
     class Config:
         orm_mode = True
