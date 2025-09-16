@@ -5,3 +5,5 @@ Pillow==10.1.0
 gunicorn==21.2.0
 whitenoise==6.6.0
 mysql-connector-python==8.0.33
+PyJWT==2.8.0
+bcrypt==4.1.2
