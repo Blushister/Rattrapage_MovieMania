@@ -33,9 +33,9 @@
     </div>
 </div>
 
-<div id="step2" class="registration-step">
-    <div class="genre-selection">
-        <div class="genre-header">
+<div id="step2" class="registration-step" style="width: 100% !important; max-width: 100% !important;">
+    <div class="genre-selection" style="width: 100% !important; max-width: 100% !important; display: flex !important; flex-direction: column !important; box-sizing: border-box !important; padding: 16px !important;">
+        <div class="genre-header" style="margin-bottom: 24px !important;">
             <div class="step-indicator">
                 <div class="step-circle">2</div>
                 <div class="step-text">Step 2 of 2</div>
@@ -44,27 +44,24 @@
             <p class="genre-subtitle">Select at least 3 genres for personalized recommendations.</p>
         </div>
 
-        <form method="POST" id="signupForm">
+        <form method="POST" id="signupForm" style="width: 100% !important; max-width: 100% !important; display: flex !important; flex-direction: column !important; box-sizing: border-box !important;">
             {% csrf_token %}
             <input type="hidden" name="email" id="hiddenEmail">
             <input type="hidden" name="password" id="hiddenPassword">
             
-            <div class="genres-grid">
+            <div class="genres-tags-container" style="display: flex !important; flex-wrap: wrap !important; width: 100% !important; padding: 24px !important; background: linear-gradient(135deg, rgba(44, 62, 80, 0.3), rgba(52, 73, 94, 0.2)) !important; border-radius: 16px !important; border: 1px solid rgba(52, 152, 219, 0.2) !important; gap: 12px !important; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;">
                 {% for genre in genres %}
-                <div class="genre-card" data-genre-id="{{ genre.genre_id }}">
-                    <div class="genre-image"></div>
-                    <div class="genre-overlay">
-                        <div class="genre-name">{{ genre.name }}</div>
-                    </div>
-                    <div class="genre-checkbox">✓</div>
+                <div class="genre-tag" data-genre-id="{{ genre.genre_id }}" onclick="toggleGenreTag(this)" style="width: calc(50% - 6px) !important; margin: 0 !important; padding: 16px 20px !important; text-align: center !important; background: rgba(52, 73, 94, 0.6) !important; border: 1px solid rgba(149, 165, 166, 0.3) !important; border-radius: 12px !important; box-sizing: border-box !important; cursor: pointer !important; transition: all 0.3s ease !important; font-weight: 500 !important; color: #ffffff !important; display: flex !important; align-items: center !important; justify-content: space-between !important; min-height: 56px !important;">
+                    <span class="tag-name">{{ genre.name }}</span>
+                    <span class="tag-icon">+</span>
                     <input type="checkbox" name="genres" value="{{ genre.genre_id }}" style="display: none;">
                 </div>
                 {% endfor %}
             </div>
 
-            <div class="selection-count">0 genres selected</div>
+            <div class="selection-count" style="margin-top: 20px !important; margin-bottom: 20px !important;">0 genres selected</div>
 
-            <div class="navigation">
+            <div class="navigation" style="margin-top: 0 !important; display: flex !important; flex-direction: row !important; justify-content: space-between !important; align-items: center !important; width: 100% !important;">
                 <button type="button" id="backStepBtn" class="nav-button back">Back</button>
                 <button type="submit" id="createAccountBtn" class="nav-button next" disabled>Create Account</button>
             </div>
@@ -74,4 +71,103 @@
 {% endblock %}
 
 {% block extra_js %}
+<style>
+/* Responsive columns for genre tags */
+@media (min-width: 768px) {
+    .genre-tag { width: calc(33.333% - 8px) !important; }
+}
+@media (min-width: 1024px) {
+    .genre-tag { width: calc(25% - 9px) !important; }
+}
+@media (min-width: 1200px) {
+    .genre-tag { width: calc(20% - 10px) !important; }
+}
+
+/* Hover effects */
+.genre-tag:hover {
+    background: rgba(52, 152, 219, 0.4) !important;
+    border-color: rgba(52, 152, 219, 0.6) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 16px rgba(52, 152, 219, 0.3) !important;
+}
+
+.genre-tag.selected {
+    background: rgba(46, 204, 113, 0.5) !important;
+    border-color: rgba(46, 204, 113, 0.7) !important;
+    color: #2ecc71 !important;
+    box-shadow: 0 4px 16px rgba(46, 204, 113, 0.4) !important;
+}
+
+.genre-tag.selected .tag-icon {
+    color: #2ecc71 !important;
+}
+</style>
+<script>
+let selectedGenres = [];
+
+function toggleGenreTag(tagElement) {
+    const genreId = tagElement.getAttribute('data-genre-id');
+    const checkbox = tagElement.querySelector('input[type="checkbox"]');
+    const icon = tagElement.querySelector('.tag-icon');
+    
+    if (tagElement.classList.contains('selected')) {
+        tagElement.classList.remove('selected');
+        checkbox.checked = false;
+        icon.textContent = '+';
+        selectedGenres = selectedGenres.filter(id => id !== genreId);
+    } else {
+        tagElement.classList.add('selected');
+        checkbox.checked = true;
+        icon.textContent = '✓';
+        selectedGenres.push(genreId);
+    }
+    
+    updateSelectionCount();
+}
+
+function updateSelectionCount() {
+    const count = selectedGenres.length;
+    const countElement = document.querySelector('.selection-count');
+    const createBtn = document.getElementById('createAccountBtn');
+    
+    if (count === 0) {
+        countElement.textContent = '0 genres sélectionnés';
+        countElement.classList.remove('valid');
+    } else if (count < 3) {
+        countElement.textContent = `${count} genres sélectionnés (${3 - count} de plus requis)`;
+        countElement.classList.remove('valid');
+    } else {
+        countElement.textContent = `${count} genres sélectionnés ✓`;
+        countElement.classList.add('valid');
+    }
+    
+    createBtn.disabled = count < 3;
+}
+
+document.getElementById('nextStepBtn').addEventListener('click', function() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    if (email && password) {
+        document.getElementById('hiddenEmail').value = email;
+        document.getElementById('hiddenPassword').value = password;
+        
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
+        
+        document.querySelector('.card').classList.add('wide-card');
+    }
+});
+
+document.getElementById('backStepBtn').addEventListener('click', function() {
+    document.getElementById('step2').classList.remove('active');
+    document.getElementById('step1').classList.add('active');
+    
+    document.querySelector('.card').classList.remove('wide-card');
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateSelectionCount();
+});
+</script>
 {% endblock %}
