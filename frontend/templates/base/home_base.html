@@ -1,37 +1,295 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MovieMania - Votre plateforme de recommandations cinématographiques personnalisées">
+    <meta name="author" content="MovieMania">
+    <meta name="theme-color" content="#007bff">
     <title>{% block title %}MovieMania{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block extra_css %}{% endblock %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
-<body class="home-body">
-    <header class="header">
+<body class="home-body" role="document">
+    <header class="header" role="banner">
         <div class="header-content">
             <div class="logo-header">
-                <span class="logo-main">MovieMania</span>
+                <img src="{% static 'images/logo.png' %}" alt="MovieMania" class="header-logo-image">
                 <span class="logo-sub">My Library</span>
             </div>
             
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="Search...">
-                <button class="search-btn">🔍</button>
+            <div class="search-container" role="search">
+                <label for="search-input" class="sr-only">Search for a movie</label>
+                <input type="text" id="search-input" class="search-input" placeholder="Search..." aria-label="Search for a movie">
+                <button class="search-btn" type="submit" aria-label="Start search">
+                    <span aria-hidden="true">🔍</span>
+                </button>
             </div>
             
-            <div class="user-menu">
-                <button class="user-avatar">👤</button>
-            </div>
+            <nav class="user-menu" role="navigation" aria-label="User menu">
+                <button class="user-avatar" id="userAvatar" aria-haspopup="true" aria-expanded="false" aria-label="User menu">
+                    {% if request.session.username %}
+                        {{ request.session.username|first|upper }}
+                    {% else %}
+                        <span aria-hidden="true">👤</span>
+                    {% endif %}
+                </button>
+                <div class="dropdown-menu" id="dropdownMenu" role="menu" aria-labelledby="userAvatar">
+                    <div class="dropdown-header">
+                        <span class="dropdown-username">
+                            {% if request.session.user_prenom and request.session.user_nom %}
+                                {{ request.session.user_prenom }} {{ request.session.user_nom }}
+                            {% elif request.session.username %}
+                                {{ request.session.username }}
+                            {% else %}
+                                User
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="dropdown-divider" role="separator"></div>
+                    <a href="/profile/" class="dropdown-item" role="menuitem">
+                        <span class="dropdown-icon" aria-hidden="true">👤</span>
+                        Profile
+                    </a>
+                    <button type="button" class="dropdown-item logout-btn" onclick="logout()" role="menuitem">
+                        <span class="dropdown-icon" aria-hidden="true">🚪</span>
+                        Logout
+                    </button>
+                </div>
+            </nav>
         </div>
     </header>
 
-    <main class="main-content">
+    <main class="main-content" role="main">
         {% block content %}{% endblock %}
     </main>
 
     <script src="{% static 'js/forms.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userAvatar = document.getElementById('userAvatar');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            
+            if (userAvatar && dropdownMenu) {
+                userAvatar.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const isExpanded = dropdownMenu.classList.contains('show');
+                    dropdownMenu.classList.toggle('show');
+                    userAvatar.setAttribute('aria-expanded', !isExpanded);
+                });
+                
+                document.addEventListener('click', function(e) {
+                    if (!userAvatar.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                        userAvatar.setAttribute('aria-expanded', 'false');
+                    }
+                });
+                
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && dropdownMenu.classList.contains('show')) {
+                        dropdownMenu.classList.remove('show');
+                        userAvatar.setAttribute('aria-expanded', 'false');
+                        userAvatar.focus();
+                    }
+                });
+            }
+        });
+        
+        function logout() {
+            fetch('/logout/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/login/';
+                }
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+            });
+        }
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+    
+    <!-- Movie Detail Modal - displays comprehensive movie information -->
+    <div id="movieModal" class="modal-overlay" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Movie Title</h2>
+                <button class="modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="modal-poster">
+                    <img id="modalPoster" src="" alt="" role="img">
+                </div>
+                
+                <div class="modal-info">
+                    <div class="modal-details">
+                        <p id="modalOverview">Movie overview...</p>
+                        
+                        <div class="modal-meta">
+                            <div class="meta-item">
+                                <strong>Release Date:</strong>
+                                <span id="modalReleaseDate">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <strong>Runtime:</strong>
+                                <span id="modalRuntime">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <strong>Rating:</strong>
+                                <span id="modalRating">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <strong>Budget:</strong>
+                                <span id="modalBudget">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <strong>Revenue:</strong>
+                                <span id="modalRevenue">-</span>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-genres">
+                            <strong>Genres:</strong>
+                            <div id="modalGenres" class="genres-list"></div>
+                        </div>
+                        
+                        <div class="modal-tagline">
+                            <em id="modalTagline"></em>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-rating">
+                        <h3>Noter ce film</h3>
+                        <div class="star-rating" id="starRating" role="radiogroup" aria-label="Rate movie from 1 to 5 stars">
+                            <button class="star" data-rating="1" role="radio" aria-checked="false" aria-label="1 star" tabindex="-1">★</button>
+                            <button class="star" data-rating="2" role="radio" aria-checked="false" aria-label="2 stars" tabindex="-1">★</button>
+                            <button class="star" data-rating="3" role="radio" aria-checked="false" aria-label="3 stars" tabindex="-1">★</button>
+                            <button class="star" data-rating="4" role="radio" aria-checked="false" aria-label="4 stars" tabindex="-1">★</button>
+                            <button class="star" data-rating="5" role="radio" aria-checked="false" aria-label="5 stars" tabindex="-1">★</button>
+                        </div>
+                        <div class="rating-feedback" id="ratingFeedback" aria-live="polite"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-cast-crew">
+                <section class="cast-section">
+                    <h3>Cast</h3>
+                    <div id="modalCast" class="cast-grid" role="list"></div>
+                </section>
+                
+                <section class="crew-section">
+                    <h3>Crew</h3>
+                    <div id="modalCrew" class="crew-grid" role="list"></div>
+                </section>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal-overlay" role="dialog" aria-labelledby="editProfileTitle" aria-hidden="true">
+        <div class="modal-content" style="max-width: 500px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h2 id="editProfileTitle">Edit Profile</h2>
+                <button class="modal-close" aria-label="Close modal" onclick="closeEditProfileModal()">&times;</button>
+            </div>
+            
+            <div class="modal-body" style="padding: 2rem; display: flex; flex-direction: column;">
+                <!-- User Information Section -->
+                <div class="profile-section" style="margin-bottom: 3rem; width: 100%;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">User Information</h3>
+                    <form id="profileForm">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <label for="firstName" style="color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">First Name</label>
+                                <input type="text" id="firstName" name="prenom" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-primary); box-sizing: border-box;">
+                            </div>
+                            <div>
+                                <label for="lastName" style="color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">Last Name</label>
+                                <input type="text" id="lastName" name="nom" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-primary); box-sizing: border-box;">
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <label for="birthday" style="color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">Birthday</label>
+                                <input type="date" id="birthday" name="birthday" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-primary); box-sizing: border-box;">
+                            </div>
+                            <div>
+                                <label for="gender" style="color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">Gender</label>
+                                <select id="gender" name="sexe" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-primary); box-sizing: border-box;">
+                                    <option value="">Select gender</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <label for="email" style="color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">Email</label>
+                            <input type="email" id="email" name="email" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-primary); box-sizing: border-box;" readonly>
+                        </div>
+                        
+                        <button type="button" onclick="submitProfileForm()" style="background: var(--primary-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 600; width: 100%; box-sizing: border-box;">Update Profile</button>
+                    </form>
+                </div>
+                
+                <!-- Password Change Section -->
+                <div class="password-section" style="width: 100%;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">Change Password</h3>
+                    <form id="passwordForm">
+                        <div style="margin-bottom: 1rem;">
+                            <label for="currentPassword" style="color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">Current Password</label>
+                            <input type="password" id="currentPassword" name="current_password" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-primary); box-sizing: border-box;" required>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <label for="newPassword" style="color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">New Password</label>
+                            <input type="password" id="newPassword" name="new_password" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-primary); box-sizing: border-box;" required>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <label for="confirmPassword" style="color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" name="confirm_password" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-primary); box-sizing: border-box;" required>
+                        </div>
+                        
+                        <button type="button" onclick="submitPasswordForm()" style="background: var(--error-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 600; width: 100%; box-sizing: border-box;">Change Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- CSRF Token for AJAX requests -->
+    <script>
+        window.csrfToken = '{{ csrf_token }}';
+    </script>
+    
     {% block extra_js %}{% endblock %}
 </body>
 </html>
