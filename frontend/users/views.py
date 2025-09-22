@@ -710,5 +710,30 @@ def change_password(request):
         return JsonResponse({'error': 'Server error'}, status=500)
 
 
+def recommendations_proxy(request):
+    if 'access_token' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+    
+    try:
+        access_token = request.session.get('access_token')
+        
+        headers = {'Authorization': f'Bearer {access_token}'}
+        
+        response = requests.get(
+            "http://rec_api:8000/recommendations/",
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            return JsonResponse(response.json(), safe=False)
+        else:
+            logger.error(f"Recommendations API error: {response.status_code} - {response.text}")
+            return JsonResponse({'error': 'Failed to fetch recommendations'}, status=response.status_code)
+            
+    except Exception as e:
+        logger.error(f"Error in recommendations proxy: {e}")
+        return JsonResponse({'error': 'Server error'}, status=500)
+
+
 
 
