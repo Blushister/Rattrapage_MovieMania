@@ -39,7 +39,7 @@
 
 .hero-info {
     max-width: 100%;
-    text-align: center;
+    text-align: left;
 }
 
 .hero-title {
@@ -57,7 +57,7 @@
     gap: var(--spacing-sm);
     margin-bottom: var(--spacing-md);
     font-size: var(--font-size-sm);
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .hero-genre,
