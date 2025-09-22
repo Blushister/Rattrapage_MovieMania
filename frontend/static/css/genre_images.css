@@ -1,0 +1,83 @@
+.genre-card[data-genre-id="1"] .genre-image {
+    background: linear-gradient(45deg, #8B4513, #A0522D);
+}
+
+.genre-card[data-genre-id="2"] .genre-image {
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+}
+
+.genre-card[data-genre-id="3"] .genre-image {
+    background: linear-gradient(45deg, #FF69B4, #FF1493);
+}
+
+.genre-card[data-genre-id="4"] .genre-image {
+    background: linear-gradient(45deg, #2F4F4F, #696969);
+}
+
+.genre-card[data-genre-id="5"] .genre-image {
+    background: linear-gradient(45deg, #DC143C, #B22222);
+}
+
+.genre-card[data-genre-id="6"] .genre-image {
+    background: linear-gradient(45deg, #4B0082, #8B008B);
+}
+
+.genre-card[data-genre-id="7"] .genre-image {
+    background: linear-gradient(45deg, #228B22, #32CD32);
+}
+
+.genre-card[data-genre-id="8"] .genre-image {
+    background: linear-gradient(45deg, #FF8C00, #FF6347);
+}
+
+.genre-card[data-genre-id="9"] .genre-image {
+    background: linear-gradient(45deg, #00CED1, #20B2AA);
+}
+
+.genre-card[data-genre-id="10"] .genre-image {
+    background: linear-gradient(45deg, #FF1493, #FF69B4);
+}
+
+.genre-card[data-genre-id="11"] .genre-image {
+    background: linear-gradient(45deg, #87CEEB, #ADD8E6);
+}
+
+.genre-card[data-genre-id="12"] .genre-image {
+    background: linear-gradient(45deg, #483D8B, #6A5ACD);
+}
+
+.genre-card[data-genre-id="13"] .genre-image {
+    background: linear-gradient(45deg, #8B0000, #DC143C);
+}
+
+.genre-card[data-genre-id="14"] .genre-image {
+    background: linear-gradient(45deg, #9370DB, #8A2BE2);
+}
+
+.genre-card[data-genre-id="15"] .genre-image {
+    background: linear-gradient(45deg, #2F4F4F, #708090);
+}
+
+.genre-card[data-genre-id="16"] .genre-image {
+    background: linear-gradient(45deg, #FF4500, #FF6347);
+}
+
+.genre-card[data-genre-id="17"] .genre-image {
+    background: linear-gradient(45deg, #D2691E, #CD853F);
+}
+
+.genre-card[data-genre-id="18"] .genre-image {
+    background: linear-gradient(45deg, #8B4513, #A0522D);
+}
+
+.genre-card[data-genre-id="19"] .genre-image {
+    background: linear-gradient(45deg, #4682B4, #5F9EA0);
+}
+
+.genre-image {
+    background-color: #4a5a5a;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ctext x='50' y='50' text-anchor='middle' dy='.3em' fill='%23ffffff' font-family='Arial' font-size='14'%3E🎬%3C/text%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60px 60px;
+}
