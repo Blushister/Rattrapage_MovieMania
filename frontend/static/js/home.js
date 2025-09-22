@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             resetModalContent();
             
-            const response = await fetch(`/users/movie/${movieId}/`, {
+            const response = await fetch(`/movie/${movieId}/`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -546,7 +546,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function submitRating(movieId, rating) {
         try {
-            const response = await fetch('/users/rate-movie/', {
+            const response = await fetch('/rate-movie/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
