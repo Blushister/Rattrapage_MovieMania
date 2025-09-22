@@ -16,4 +16,5 @@ urlpatterns = [
     path('profile-data/', views.get_profile_data, name='profile_data'),
     path('update-profile/', views.update_profile, name='update_profile'),
     path('change-password/', views.change_password, name='change_password'),
+    path('api/recommendations/', views.recommendations_proxy, name='recommendations_proxy'),
 ]
