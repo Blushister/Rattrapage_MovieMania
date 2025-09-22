@@ -22,7 +22,8 @@ db.sqlite3
 db.sqlite3-journal
 media/
 staticfiles/
-static/
+# Exclure static à la racine mais pas frontend/static
+/static/
 
 # Certificats SSL et clés privées
 ssl/
