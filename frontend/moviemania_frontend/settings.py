@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_browser_reload',
     'users',
 ]
 
@@ -35,6 +36,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'moviemania_frontend.urls'
@@ -98,5 +100,22 @@ GENREUSERS_API_URL = 'http://users_api:8888/api/v1/genreusers'
 RECOMMENDATIONS_API_URL = config('RECOMMENDATIONS_API_URL', default='https://localhost/api/recos')
 RECOMMENDATIONS_API_INTERNAL_URL = 'http://rec_api:8000'
 
+# Configuration sécurisée des cookies - fonctionne en dev ET prod
+USING_HTTPS = config('USING_HTTPS', default=False, cast=bool)
+
+# Cookies de session
+SESSION_COOKIE_SECURE = USING_HTTPS  # True seulement si HTTPS activé
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_NAME = 'moviemania_session'
 SESSION_COOKIE_AGE = 3600
 SESSION_SAVE_EVERY_REQUEST = True
+
+# Cookies CSRF
+CSRF_COOKIE_SECURE = USING_HTTPS  # True seulement si HTTPS activé
+CSRF_COOKIE_HTTPONLY = False  # Doit être False pour les appels AJAX
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
