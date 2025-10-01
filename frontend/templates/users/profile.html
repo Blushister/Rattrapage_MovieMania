@@ -4,8 +4,7 @@
 {% block title %}MovieMania - Profile{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
-<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -13,7 +12,7 @@
     <div class="hero-section">
         <div class="hero-content">
             <div class="hero-info">
-                <div class="profile-avatar" style="width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 4rem; font-weight: bold; color: white; margin-bottom: 1rem;">
+                <div class="profile-avatar">
                     {{ username|first|upper }}
                 </div>
                 <h1 class="hero-title">{{ username }}</h1>
@@ -44,7 +43,7 @@
                             <button class="play-btn">▶</button>
                         </div>
                         {% if movie.note %}
-                        <div class="movie-rating-badge" style="position: absolute; top: 8px; right: 8px; background: rgba(0, 0, 0, 0.8); padding: 4px 8px; border-radius: 4px; color: white; font-size: 0.8rem;">
+                        <div class="movie-rating-badge">
                             <span>★ {{ movie.note }}</span>
                         </div>
                         {% endif %}
@@ -60,7 +59,7 @@
                     </div>
                 </div>
                 {% empty %}
-                <div class="empty-state" style="display: flex; align-items: center; justify-content: center; min-height: 300px; width: 100%; color: #888; font-size: 1.2rem; font-style: italic;">
+                <div class="empty-state">
                     <p>No rated movies yet</p>
                 </div>
                 {% endfor %}

@@ -3,11 +3,7 @@
 
 {% block title %}MovieMania - Create Account{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/genre_selection.css' %}">
-<link rel="stylesheet" href="{% static 'css/genre_images.css' %}">
-<link rel="stylesheet" href="{% static 'css/register.css' %}">
-{% endblock %}
+{% block extra_css %}{% endblock %}
 
 {% block content %}
 <div id="step1" class="registration-step active">
@@ -34,9 +30,9 @@
     </div>
 </div>
 
-<div id="step2" class="registration-step" style="width: 100% !important; max-width: 100% !important;">
-    <div class="genre-selection" style="width: 100% !important; max-width: 100% !important; display: flex !important; flex-direction: column !important; box-sizing: border-box !important; padding: 16px !important;">
-        <div class="genre-header" style="margin-bottom: 24px !important;">
+<div id="step2" class="registration-step">
+    <div class="genre-selection">
+        <div class="genre-header">
             <div class="step-indicator">
                 <div class="step-circle">2</div>
                 <div class="step-text">Step 2 of 2</div>
@@ -45,24 +41,24 @@
             <p class="genre-subtitle">Selectionnée au moin 3 genres.</p>
         </div>
 
-        <form method="POST" id="signupForm" style="width: 100% !important; max-width: 100% !important; display: flex !important; flex-direction: column !important; box-sizing: border-box !important;">
+        <form method="POST" id="signupForm">
             {% csrf_token %}
             <input type="hidden" name="email" id="hiddenEmail">
             <input type="hidden" name="password" id="hiddenPassword">
             
-            <div class="genres-tags-container" style="display: flex !important; flex-wrap: wrap !important; width: 100% !important; padding: 24px !important; background: linear-gradient(135deg, rgba(44, 62, 80, 0.3), rgba(52, 73, 94, 0.2)) !important; border-radius: 16px !important; border: 1px solid rgba(52, 152, 219, 0.2) !important; gap: 12px !important; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;">
+            <div class="genres-tags-container">
                 {% for genre in genres %}
-                <div class="genre-tag" data-genre-id="{{ genre.genre_id }}" onclick="toggleGenreTag(this)" style="width: calc(50% - 6px) !important; margin: 0 !important; padding: 16px 20px !important; text-align: center !important; background: rgba(52, 73, 94, 0.6) !important; border: 1px solid rgba(149, 165, 166, 0.3) !important; border-radius: 12px !important; box-sizing: border-box !important; cursor: pointer !important; transition: all 0.3s ease !important; font-weight: 500 !important; color: #ffffff !important; display: flex !important; align-items: center !important; justify-content: space-between !important; min-height: 56px !important;">
+                <div class="genre-tag" data-genre-id="{{ genre.genre_id }}" onclick="toggleGenreTag(this)">
                     <span class="tag-name">{{ genre.name }}</span>
                     <span class="tag-icon">+</span>
-                    <input type="checkbox" name="genres" value="{{ genre.genre_id }}" style="display: none;">
+                    <input type="checkbox" name="genres" value="{{ genre.genre_id }}" class="hidden">
                 </div>
                 {% endfor %}
             </div>
 
-            <div class="selection-count" style="margin-top: 20px !important; margin-bottom: 20px !important;">0 genres selected</div>
+            <div class="selection-count">0 genres selected</div>
 
-            <div class="navigation" style="margin-top: 0 !important; display: flex !important; flex-direction: row !important; justify-content: space-between !important; align-items: center !important; width: 100% !important;">
+            <div class="navigation">
                 <button type="button" id="backStepBtn" class="nav-button back">Back</button>
                 <button type="submit" id="createAccountBtn" class="nav-button next" disabled>Create Account</button>
             </div>

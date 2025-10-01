@@ -3,9 +3,7 @@
 
 {% block title %}MovieMania - Home{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
-{% endblock %}
+{% block extra_css %}{% endblock %}
 
 {% block content %}
 <div class="home-container">
@@ -69,6 +67,74 @@
         </div>
     </div>
 </template>
+
+<!-- Modal pour les détails du film -->
+<div id="movieModal" class="modal-overlay" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle" class="modal-title">Movie Title</h2>
+            <button class="modal-close" onclick="closeMovieModal()" aria-label="Close modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="modal-poster">
+                <img id="modalPoster" src="" alt="">
+            </div>
+            
+            <div class="modal-details">
+                <div class="modal-tagline-container">
+                    <p id="modalTagline" class="modal-tagline"></p>
+                </div>
+                
+                <p id="modalOverview"></p>
+                
+                <div class="modal-meta">
+                    <div class="meta-item">
+                        <strong>Release Date:</strong> <span id="modalReleaseDate"></span>
+                    </div>
+                    <div class="meta-item">
+                        <strong>Runtime:</strong> <span id="modalRuntime"></span>
+                    </div>
+                    <div class="meta-item">
+                        <strong>Rating:</strong> <span id="modalRating"></span>/10
+                    </div>
+                    <div class="meta-item">
+                        <strong>Budget:</strong> <span id="modalBudget"></span>
+                    </div>
+                </div>
+                
+                <div class="modal-genres">
+                    <strong>Genres:</strong>
+                    <div id="modalGenres" class="genres-list"></div>
+                </div>
+                
+                <div class="modal-rating">
+                    <h3>Your Rating</h3>
+                    <div id="starRating" class="star-rating">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                    <p id="ratingFeedback" class="rating-feedback"></p>
+                </div>
+                
+                <div class="modal-cast-crew">
+                    <div class="cast-section">
+                        <h3>Cast</h3>
+                        <div id="modalCast" class="cast-grid"></div>
+                    </div>
+                    
+                    <div class="crew-section">
+                        <h3>Crew</h3>
+                        <div id="modalCrew" class="crew-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
