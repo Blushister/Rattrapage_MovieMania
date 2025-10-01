@@ -7,3 +7,5 @@ whitenoise==6.6.0
 mysql-connector-python==8.0.33
 PyJWT==2.8.0
 bcrypt==4.1.2
+django-tailwind==3.8.0
+django-browser-reload==1.12.1

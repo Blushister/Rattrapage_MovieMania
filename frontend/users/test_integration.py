@@ -343,8 +343,6 @@ class SessionTestCase(TestCase):
             'email': 'test@example.com',
             'password': 'testpass'
         })
-        # Django should handle CSRF automatically in tests
-        # This test ensures the decorators are in place
         self.assertIn(response.status_code, [200, 403])
 
     def test_unauthorized_access_redirects(self):
